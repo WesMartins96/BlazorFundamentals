@@ -2,17 +2,22 @@
 @using Microsoft.Extensions.Logging;
 
 <EditForm Model="@produto" OnSubmit="@HandleSubmit" >
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
 
     <label class="text-muted">Nome</label>
     <InputText id="nome" @bind-Value="@produto.Nome" class="form-control" />
+    <ValidationMessage For="@(() => produto.Nome)"></ValidationMessage>
 
     <label class="text-muted">Preço</label>
     <InputNumber TValue="decimal" @bind-Value="@produto.Preco" class="form-control" />
+    <ValidationMessage For="@(() => produto.Preco)"></ValidationMessage>
 
     <label class="text-muted">Quantidade</label>
     <InputNumber TValue="int" @bind-Value="@produto.Quantidade" class="form-control" />
+    <ValidationMessage For="@(() => produto.Quantidade)"></ValidationMessage>
 
-    <button type="submit" class="btn btn-secondary mt-3">Enviar</button>
+    <button type="submit" class="btn btn-success mt-3">Enviar</button>
 
 </EditForm>
 
