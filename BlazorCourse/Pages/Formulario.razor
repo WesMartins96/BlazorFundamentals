@@ -1,7 +1,7 @@
 ﻿@using BlazorCourse.Models;
 @using Microsoft.Extensions.Logging;
 
-<EditForm Model="@produto" OnSubmit="@HandleSubmit" >
+<EditForm Model="@produto" OnValidSubmit="@HandleSubmit" OnInvalidSubmit="@ErrorSubmit">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>
 
@@ -38,5 +38,10 @@
     void HandleSubmit()
     {
         msg = $"PRODUTO: {produto.Nome} - PREÇO: {produto.Preco.ToString("C")} - QUANTIDADE: {produto.Quantidade} - VALOR ESTOQUE TOTAL: {produto.ValorEstoqueTotal().ToString("C")}";
+    }
+
+    private void ErrorSubmit()
+    {
+        msg = $"Erro ao realizar o envio do formulario!";
     }
 }
