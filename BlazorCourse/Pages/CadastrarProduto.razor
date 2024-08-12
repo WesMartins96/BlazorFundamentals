@@ -1,0 +1,28 @@
+﻿@page "/"
+@* @page "/cadastrarproduto" *@
+
+@using BlazorCourse.Models;
+
+<Titulo Texto="Cadastro de Produtos"></Titulo>
+
+@produto.Nome
+<br />
+@produto.Preco
+<br />
+@produto.Quantidade
+<br />
+@produto.ValorEstoqueTotal()
+<br />
+<button @onclick="colocaDados" class="btn btn-primary">Colocar Dados</button>
+
+@code {
+
+    Produto produto = new Produto();
+
+    private void colocaDados()
+    {
+        produto.Nome = "Caneta";
+        produto.Preco = 10M;
+        produto.Quantidade = 7;
+    }
+}
