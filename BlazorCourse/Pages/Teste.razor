@@ -1,10 +1,11 @@
 ﻿@page "/teste"
 
-<h1 class="text-center text-primary p-5">@nome</h1>
+<h1 class="@minhaClasse" style="@meuEstilo">@nome</h1>
 
 <div>
     <label class="text-muted">Digite o seu nome</label>
-    <input class="form-control" type="text" @bind="texto" />
+    <input class="form-control" type="text" @bind-value="nome" />
+    <input class="form-control mt-2" type="text" @bind="texto" />
 </div>
 <div class="mt-2">
     <button @onclick="Mudar" class="btn btn-outline-primary">Mudar Título</button>
@@ -31,15 +32,24 @@
 @code {
     string nome = "Wesley Martins";
 
+    string minhaClasse = "";
+    string meuEstilo = "";
+
     public void Mudar()
     {
         nome = "Texto modificado pelo C-Sharp no front";
+
+        minhaClasse = "text-success";
+
+        meuEstilo = "font-size: 3rem;";
     }
 
     string texto = "";
     string textoFinal = "";
     public void MudarTextoInput()
     {
-         textoFinal = $"Olá, Sou {texto}"; 
+        textoFinal = $"Olá, Sou {texto}";
     }
+
+    
 }
