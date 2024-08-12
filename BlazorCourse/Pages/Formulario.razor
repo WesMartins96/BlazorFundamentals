@@ -1,0 +1,37 @@
+﻿@using BlazorCourse.Models;
+@using Microsoft.Extensions.Logging;
+
+<EditForm Model="@produto" OnSubmit="@HandleSubmit" >
+
+    <label class="text-muted">Nome</label>
+    <InputText id="nome" @bind-Value="@produto.Nome" class="form-control" />
+
+    <label class="text-muted">Preço</label>
+    <InputNumber TValue="decimal" @bind-Value="@produto.Preco" class="form-control" />
+
+    <label class="text-muted">Quantidade</label>
+    <InputNumber TValue="int" @bind-Value="@produto.Quantidade" class="form-control" />
+
+    <button type="submit" class="btn btn-secondary mt-3">Enviar</button>
+
+</EditForm>
+
+<div class="m-4 border shadow">
+    <div class="text-center p-4">
+        @msg
+    </div>
+</div>
+
+
+@code {
+
+    Produto produto = new Produto();
+
+    [Parameter]
+    public string msg { get; set; } = "";
+
+    void HandleSubmit()
+    {
+        msg = $"PRODUTO: {produto.Nome} - PREÇO: {produto.Preco.ToString("C")} - QUANTIDADE: {produto.Quantidade} - VALOR ESTOQUE TOTAL: {produto.ValorEstoqueTotal().ToString("C")}";
+    }
+}

@@ -4,25 +4,49 @@
 @using BlazorCourse.Models;
 
 <Titulo Texto="Cadastro de Produtos"></Titulo>
+<Mensagem Msg="@msg"></Mensagem>
 
-@produto.Nome
-<br />
-@produto.Preco
-<br />
-@produto.Quantidade
-<br />
-@produto.ValorEstoqueTotal()
-<br />
-<button @onclick="colocaDados" class="btn btn-primary">Colocar Dados</button>
+<label class="text-muted">Nome</label>
+<input @bind-value="@produto.Nome" class="form-control" />
+
+<label class="text-muted">Preço</label>
+<input @bind-value="@produto.Preco" class="form-control" />
+
+<label class="text-muted">Quantidade</label>
+<input @bind-value="@produto.Quantidade" class="form-control" />
+
+<button @onclick="incluir" class="mt-3 btn btn-primary">Incluir</button>
+
+<div class="p-5 mt-3 border shadow">
+    <h4 class="text-center">Produto Cadastrado</h4>
+    @produto.Nome
+    <br />
+    @produto.Preco
+    <br />
+    @produto.Quantidade
+    <br />
+    @produto.ValorEstoqueTotal()
+    <br />
+</div>
+
+<button @onclick="colocaDados" class="btn btn-primary mt-3">Colocar Dados</button>
+
+<Formulario msg="msg"></Formulario>
 
 @code {
 
     Produto produto = new Produto();
+    string msg = "";
 
     private void colocaDados()
     {
         produto.Nome = "Caneta";
         produto.Preco = 10M;
         produto.Quantidade = 7;
+    }
+  
+    private void incluir()
+    {
+        msg = "Produto Cadastrado com sucesso!";
     }
 }
