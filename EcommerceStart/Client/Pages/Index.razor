@@ -5,6 +5,26 @@
 
 Welcome to my new app.
 
+@for (int i = 0; i <= 10; i++)
+{
+    <h5>for @i</h5>
+}
+
+@{
+    MudarMsg();
+}
+
+<div class="border shadow p-3 text-center">
+    @msg
+</div>
+
 @code {
+    private string msg = "";
+
+    private void MudarMsg()
+    {
+        msg = "Cheguei na função!";
+    }
+
 
 }

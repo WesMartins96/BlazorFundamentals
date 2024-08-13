@@ -1,18 +1,15 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
+<div class="px-5 vh-100 d-flex flex-column">
+    <div class="bg-dark text-center text-white p-3">
+        Arquivos | Textos | Exemplos | Blog
+    </div>
 
-    <main>
-        <div class="bg-dark text-center text-white p-3">
-            Arquivos | Textos | Exemplos | Blog
-        </div>
+    <article class="py-3 h-100">
+        @Body
+    </article>
 
-        <article class="content px-4">
-            @Body
-        </article>
-
-        <div class="bg-dark text-center text-white p-3">
-            FOOTER
-        </div>
-    </main>
+    <div class="bg-dark text-center text-white p-3">
+        FOOTER
+    </div>
 </div>
