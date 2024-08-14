@@ -5,20 +5,30 @@
 
 Welcome to my new app.
 
-@for (int i = 0; i <= 10; i++)
-{
-    <h5>for @i</h5>
-}
+<div class="mt-2 border shadow">
+    @for (int i = 0; i <= 5; i++)
+    {
+        <h5 class="p-2 text-dark">Utilizando o laço for com c# no front <span class="text-primary" style="font-family:'Anonymous Pro'"> @i</span></h5>
+    }
+</div>
 
 @{
     MudarMsg();
 }
 
-<div class="border shadow p-3 text-center">
+<div class="border shadow p-3 text-center mt-3">
     @msg
 </div>
 
+
+<div>
+    <InputTextArea class="form-control" @bind-Value="conteudo" ></InputTextArea>
+</div>
+
+
 @code {
+    string conteudo = "";
+
     private string msg = "";
 
     private void MudarMsg()
@@ -26,5 +36,20 @@ Welcome to my new app.
         msg = "Cheguei na função!";
     }
 
+    //Ciclo de vida do componente
+    protected override void OnInitialized()
+    {
+        conteudo += "Passei no OnInitialized \n";
+    }
+
+    protected override void OnParametersSet()
+    {
+        conteudo += "Passei no OnParametersSet \n";
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        conteudo += "Passei no OnAfterRender \n";
+    }
 
 }
