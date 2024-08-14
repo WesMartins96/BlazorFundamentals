@@ -1,0 +1,39 @@
+﻿@page "/ProdutoPorId"
+@using EcommerceStart.Shared
+@inject HttpClient httpClient
+
+<h1>Consulte o produto por ID</h1>
+
+
+<label class="text-muted">
+    Informe um ID:
+    <input class="form-control" @bind-value="produtoId" />
+</label>
+
+<button class="ms-2 btn btn-success" @onclick="ConsumirAPI">Consumir API</button>
+
+<div class="border shadow mt-3 p-5" style="font-family:Roboto; border-radius: 6px;">
+    <p>ID: @p.Id</p>
+    <p>TITLE: @p.Title</p>
+    <p>DESCRIPTION: @p.Description</p>
+</div>
+
+@code {
+
+    int produtoId;
+    Produto? p = new();
+
+    private async Task ConsumirAPI()
+    {
+        var response = await httpClient.GetAsync($"https://dummyjson.com/products/{produtoId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            p = await response.Content.ReadFromJsonAsync<Produto>();
+
+        }
+
+    }
+
+}
+
