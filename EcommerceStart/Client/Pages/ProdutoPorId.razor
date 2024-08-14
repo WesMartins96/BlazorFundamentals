@@ -1,11 +1,31 @@
 ﻿@page "/ProdutoPorId"
-@using EcommerceStart.Shared
+@using EcommerceStart.Shared.Models
 @inject HttpClient httpClient
 
 <h1>Consulte o produto por ID</h1>
 
-
 <label class="text-muted">
+    Informe um ID:
+    <input class="form-control" @bind-value="" />
+</label>
+
+<button class="ms-2 btn btn-success" @onclick="">Consumir API</button>
+
+<div class="border shadow mt-3 p-5" style="font-family:Roboto; border-radius: 6px;">
+    <p><strong>ID:</strong> @p.Id</p>
+    <p><strong>NOME:</strong> @p.Nome</p>
+    <p><strong>PREÇO:</strong> @p.Preco</p>
+</div>
+
+
+@code {
+
+}
+
+
+
+
+@* <label class="text-muted">
     Informe um ID:
     <input class="form-control" @bind-value="produtoId" />
 </label>
@@ -14,11 +34,12 @@
 
 <div class="border shadow mt-3 p-5" style="font-family:Roboto; border-radius: 6px;">
     <p><strong>ID:</strong> @p.Id</p>
-    <p><strong>TITLE:</strong> @p.Title</p>
-    <p><strong>DESCRIPTION:</strong> @p.Description</p>
-</div>
+    <p><strong>NOME:</strong> @p.Nome</p>
+    <p><strong>PREÇO:</strong> @p.Preco</p>
+</div> *@
 
-@code {
+
+@* @code {
 
     int produtoId;
     Produto? p = new();
@@ -35,5 +56,5 @@
 
     }
 
-}
+} *@
 
