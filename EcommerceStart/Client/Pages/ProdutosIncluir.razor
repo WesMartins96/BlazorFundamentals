@@ -1,0 +1,57 @@
+﻿@page "/produtosincluir"
+@using EcommerceStart.Shared.Models
+@inject HttpClient httpClient
+
+<h3>Inclusão de Produtos</h3>
+
+<div class="shadow p-3">
+    <EditForm Model="@produto" OnValidSubmit="Incluir" class="d-flex flex-column">
+
+        <label class="text-muted mt-2">
+            Nome: <InputText class="form-control" @bind-Value="produto.Nome"></InputText>
+        </label>
+
+        <label class="text-muted mt-2">
+            Preço: <InputNumber class="form-control" @bind-Value="produto.Preco"></InputNumber>
+        </label>
+
+        <label class="text-muted mt-2">
+            Quantidade: <InputNumber class="form-control" @bind-Value="produto.Quantidade"></InputNumber>
+        </label>
+
+        <label class="text-muted mt-2">
+            Imagem: <InputText class="form-control" @bind-Value="produto.Imagem"></InputText>
+        </label>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">Incluir Produto</button>
+        </div>
+
+    </EditForm>
+
+    <div class="text-danger text-center p-3">
+        @msg
+    </div>
+</div>
+
+
+@code {
+    Produto produto = new();
+    string msg = string.Empty;
+
+    private async Task Incluir()
+    {
+        string api = "api/produtos/incluir";
+        var response = await httpClient.PostAsJsonAsync<Produto>(api, produto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            msg = await response.Content.ReadAsStringAsync();           
+        }
+        else
+        {
+            msg = "Produto incluido com sucesso!";
+            produto = new();
+        }
+    }
+}
