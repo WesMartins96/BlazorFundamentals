@@ -35,7 +35,7 @@ namespace EcommerceStart.Server.Controllers
             List<Produto> retorno = Banco.Produtos.ToList();
             if (nome != null)
             {
-                retorno = Banco.Produtos.Where(e => e.Nome.Contains(nome)).ToList();
+                retorno = Banco.Produtos.Where(e => e.Nome.ToUpper().Contains(nome.ToUpper())).ToList();
             }
 
             if (retorno.Count > 0)
