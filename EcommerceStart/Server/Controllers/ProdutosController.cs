@@ -29,6 +29,40 @@ namespace EcommerceStart.Server.Controllers
             return Ok();
         }
 
+        [HttpPost("incluir-ou-alterar")]
+        public ActionResult IncluirOuAlterar(Produto produto)
+        {
+            if (produto == null)
+                return BadRequest("Produto não foi enviado por parâmetro");
+
+            Produto? produtoExistente = Banco.Produtos.Where(p => p.Id.Equals(produto.Id)).FirstOrDefault();
+            if (produtoExistente is null) 
+            {
+                //aqui o produto é novo
+                Produto? produtoAnterior = Banco.Produtos.OrderByDescending(e => e.Id).FirstOrDefault();
+                if (produtoAnterior != null)
+                {
+                    produto.Id = produtoAnterior.Id + 1;
+                }
+                else
+                {
+                    produto.Id = 1;
+                }
+                Banco.Produtos.Add(produto);
+            }
+            else
+            {
+                //aqui o produto já existe
+                produtoExistente.Nome = produto.Nome;
+                produtoExistente.Preco = produto.Preco;
+                produtoExistente.Quantidade = produto.Quantidade;
+                produtoExistente.Imagem = produto.Imagem;
+            }
+                      
+            return Ok();
+        }
+
+
         [HttpGet("listar")]
         public IActionResult Listar(string? nome)
         {

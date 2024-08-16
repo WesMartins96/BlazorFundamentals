@@ -54,6 +54,11 @@
     string encontrarProduto = string.Empty;
     private List<Produto>? produtos = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        await Carregar();
+    }
+
     protected async Task Carregar()
     {
         string api = "api/produtos/listar";
@@ -73,5 +78,7 @@
             msg = await response.Content.ReadAsStringAsync();
         }
     }
+
+
 
 }

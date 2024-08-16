@@ -1,0 +1,147 @@
+﻿@page "/crudprodutos"
+@using EcommerceStart.Shared.Models
+@inject HttpClient httpClient
+
+<h3>CRUD de Produtos</h3>
+
+<EditForm Model="@produto" OnValidSubmit="Incluir" class="d-flex flex-row ms-2">
+
+    <label class="text-muted ms-2 mt-0">
+        Nome: <InputText class="form-control" @bind-Value="produto.Nome"></InputText>
+    </label>
+
+    <label class="text-muted ms-2 mt-0">
+        Preço: <InputNumber class="form-control" @bind-Value="produto.Preco"></InputNumber>
+    </label>
+
+    <label class="text-muted ms-2 mt-0">
+        Quantidade: <InputNumber class="form-control" @bind-Value="produto.Quantidade"></InputNumber>
+    </label>
+
+    <label class="text-muted ms-2 mt-0">
+        Imagem: <InputText class="form-control" @bind-Value="produto.Imagem"></InputText>
+    </label>
+
+    <div class="ms-2 mt-4">
+        <button type="submit" class="btn btn-success">Incluir Produto</button>
+    </div>
+
+</EditForm>
+
+<div class="text-center p-3">
+    <table class="table shadow" style="font-family:Roboto">
+        <tr>
+            <td class="border p-2">#</td>
+            <td class="border p-2">Nome</td>
+            <td class="border p-2">Preço</td>
+            <td class="border p-2">Quantidade</td>
+            <td class="border p-2">imagem</td>
+            <td class="border p-2">Ações</td>
+        </tr>
+
+        @foreach (Produto produto in produtos!)
+        {
+            <tr>
+                <td class="border p-2">@produto.Id</td>
+                <td class="border p-2">@produto.Nome</td>
+                <td class="border p-2">@produto.Preco.ToString("C")</td>
+                <td class="border p-2">@produto.Quantidade</td>
+                <td class="border p-2">
+                    <img src="@produto.Imagem" class="w-25" alt="Imagem do produto" />
+                </td>
+                <td class="border p-2">
+                    <button class="btn btn-outline-warning" @onclick="@(e => Consultar(produto.Id))">Alterar</button>
+                    <button class="btn btn-outline-danger" @onclick="@(e => Excluir(produto.Id))">Excluir</button>
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>
+
+@code {
+    private List<Produto>? produtos = new();
+    string msg = string.Empty;
+    Produto? produto = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Carregar();
+    }
+
+    protected async Task Consultar(int produtoId)
+    {
+        string api = $"api/produtos/consultar/{produtoId}";
+
+        var response = await httpClient.GetAsync(api);
+        if (!response.IsSuccessStatusCode)
+        {
+            msg = await response.Content.ReadAsStringAsync();
+            produto = new();
+        }
+        else
+        {
+            produto = await response.Content.ReadFromJsonAsync<Produto>();
+        }
+    }
+
+    protected async Task Carregar()
+    {
+        string api = "api/produtos/listar";
+
+        var response = await httpClient.GetAsync(api);
+        if (response.IsSuccessStatusCode)
+        {
+            produtos = await response.Content.ReadFromJsonAsync<List<Produto>>();
+
+        }
+        else
+        {
+            msg = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    private async Task Incluir()
+    {
+        string api = "api/produtos/incluir-ou-alterar";
+        var response = await httpClient.PostAsJsonAsync<Produto>(api, produto!);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            msg = await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            msg = "Produto incluido com sucesso!";
+            await Carregar();
+            produto = new();
+        }        
+    }
+
+    protected async Task Excluir(int produtoId)
+    {
+        if (produto is null)
+        {
+            msg = "Produto está nulo.";
+        }
+
+        string api = $"api/produtos/excluir/{produtoId}";
+        var response = await httpClient.DeleteAsync(api);
+        if (!response.IsSuccessStatusCode)
+        {
+            if (string.IsNullOrEmpty(msg))
+            {
+                msg = $"Não foi possivel localizar a API {api}";
+            }
+            msg = await response.Content.ReadAsStringAsync();
+            produto = new();
+        }
+        else
+        {
+            msg = "Excluido com sucesso";
+            await Carregar();
+            produto = new();
+        }
+
+    }
+}
