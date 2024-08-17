@@ -1,4 +1,5 @@
-﻿using EcommerceStart.Shared.Models;
+﻿using EcommerceStart.Server.Repositories;
+using EcommerceStart.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,21 @@ namespace EcommerceStart.Server.Controllers
     [ApiController]
     public class ProdutosController : ControllerBase
     {
+
+        private readonly ProdutoRepository _produtoRepository;
+
+        public ProdutosController(ProdutoRepository produtoRepository)
+        {
+            _produtoRepository = produtoRepository;
+        }
+
+        [HttpGet("listar")]
+        public IActionResult Listar(string? nome)
+        {
+            var produtos = _produtoRepository.GetProdutos();
+            return Ok(produtos);
+        }
+
         [HttpPost("incluir")]
         public ActionResult Incluir(Produto produto)
         {
@@ -63,24 +79,7 @@ namespace EcommerceStart.Server.Controllers
         }
 
 
-        [HttpGet("listar")]
-        public IActionResult Listar(string? nome)
-        {
-            List<Produto> retorno = Banco.Produtos.ToList();
-            if (nome != null)
-            {
-                retorno = Banco.Produtos.Where(e => e.Nome.ToUpper().Contains(nome.ToUpper())).ToList();
-            }
-
-            if (retorno.Count > 0)
-            {
-                return Ok(retorno);
-            }
-            else
-            {
-                return BadRequest("Nenhum produto encontrado!");
-            }
-        }
+        
 
         [HttpGet("consultar/{id:int}")]
         public IActionResult Consultar(int id)
