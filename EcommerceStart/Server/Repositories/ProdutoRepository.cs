@@ -1,4 +1,5 @@
 ﻿using EcommerceStart.Shared.Models;
+using Npgsql;
 using System.Data;
 
 namespace EcommerceStart.Server.Repositories
@@ -39,6 +40,25 @@ namespace EcommerceStart.Server.Repositories
                 _connection.Close();
             }
             return produtos;
+        }
+
+        public void AddProduto(Produto produto) 
+        {
+            var query = @"INSERT INTO produtos (nome, preco, quantidade, imagem)
+                            VALUES (@Nome, @Preco, @Quantidade, @Imagem)";
+
+            using (var command = _connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.Add(new NpgsqlParameter("@Nome", produto.Nome));
+                command.Parameters.Add(new NpgsqlParameter("@Preco", produto.Preco));
+                command.Parameters.Add(new NpgsqlParameter("@Quantidade", produto.Quantidade));
+                command.Parameters.Add(new NpgsqlParameter("@Imagem", produto.Imagem));
+
+                _connection.Open();
+                command.ExecuteNonQuery();
+                _connection.Close();
+            }       
         }
     }
 }

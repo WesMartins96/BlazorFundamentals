@@ -28,21 +28,8 @@ namespace EcommerceStart.Server.Controllers
         [HttpPost("incluir")]
         public ActionResult Incluir(Produto produto)
         {
-            if (produto == null)
-                return BadRequest("Produto não foi enviado por parâmetro");
-
-            Produto? produtoAnterior = Banco.Produtos.OrderByDescending(e => e.Id).FirstOrDefault();
-            if (produtoAnterior != null)
-            {
-                produto.Id = produtoAnterior.Id + 1;
-            }
-            else
-            {
-                produto.Id = 1;
-            }
-
-            Banco.Produtos.Add(produto);
-            return Ok();
+            _produtoRepository.AddProduto(produto);
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPost("incluir-ou-alterar")]
