@@ -54,8 +54,8 @@
     int produtoId;
     string msg = "";
     Produto? produto = new();
-    
-    
+
+
 
     protected async Task Consultar()
     {
@@ -78,9 +78,10 @@
         if (produto == null)
         {
             msg = "Produto está nulo.";
+            return;
         }
 
-        string api = "api/produtos/alterar";
+        string api = $"api/produtos/alterar/{produtoId}";
         var response = await httpClient.PutAsJsonAsync<Produto>(api, produto);
 
         if (!response.IsSuccessStatusCode)
@@ -89,6 +90,10 @@
             if (string.IsNullOrEmpty(msg))
             {
                 msg = $"Não foi possivel acessar {api}";
+            }
+            else
+            {
+                msg = "Produto alterado com sucesso!";
             }
         }
     }

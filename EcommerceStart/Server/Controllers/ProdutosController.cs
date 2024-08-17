@@ -71,40 +71,32 @@ namespace EcommerceStart.Server.Controllers
         [HttpGet("consultar/{id:int}")]
         public IActionResult Consultar(int id)
         {
-            Produto? p = Banco.Produtos.Where(e => e.Id == id).FirstOrDefault();
-            if (p == null)
-                return BadRequest("Produto não existe mais na base de dados, deve ter sido removido");
+            var produto = _produtoRepository.GetProdutoById(id);
+            if (produto == null)
+            {
+                return NotFound();
+            }
 
-            return Ok(p);
+            return Ok(produto);
         }
 
-        [HttpPut("alterar")]
-        public IActionResult Alterar(Produto produto)
+        [HttpPut("alterar/{id}")]
+        public IActionResult Alterar(int id, [FromBody]Produto produto)
         {
-            if (produto == null)
-                return BadRequest("Produto não foi enviado por parâmetro");
+            if (id != produto.Id)
+            {
+                return BadRequest("ID do produto não corresponde ao ID na solicitação.");
+            }
 
-            Produto? p = Banco.Produtos.Where(e => e.Id == produto.Id).FirstOrDefault();
-            if (p == null)
-                return BadRequest("Produto não existe mais na base de dados, deve ter sido removido");
-
-            p.Nome = produto.Nome;
-            p.Preco = produto.Preco;
-            p.Quantidade = produto.Quantidade;
-            p.Imagem = produto.Imagem;
-
-            return Ok();
+            _produtoRepository.UpdateProduto(produto);
+            return NoContent();
         }
 
         [HttpDelete("excluir/{id:int}")]
         public IActionResult Excluir(int id)
         {
-            Produto? p = Banco.Produtos.Where(e => e.Id == id).FirstOrDefault();
-            if (p == null)
-                return BadRequest("Produto não existe mais na base de dados");
-
-            Banco.Produtos.Remove(p);
-            return Ok();
+            _produtoRepository.DeleteProduto(id);
+            return NoContent();
         }
     }
 }
