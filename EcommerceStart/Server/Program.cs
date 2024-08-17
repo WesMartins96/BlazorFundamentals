@@ -1,4 +1,6 @@
+using EcommerceStart.Shared.Data;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<Context>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Server=127.0.0.1;Port=5432;Database=blazorCRUD;User Id=postgres;Password=260274;")));
+
 
 var app = builder.Build();
 

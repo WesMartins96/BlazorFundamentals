@@ -9,7 +9,7 @@ namespace EcommerceStart.Shared.Models
     public class Produto
     {
         public int Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
+        public string Nome { get; set; }
         public decimal Preco { get; set; }
         public int Quantidade { get; set; }
         public string Imagem { get; set; } = string.Empty;
