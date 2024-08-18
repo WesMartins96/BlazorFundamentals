@@ -23,10 +23,16 @@
     </label>
 
     <div class="ms-2 mt-4">
-        <button type="submit" class="btn btn-success">Incluir Produto</button>
+        <button type="submit" class="btn @(isEditing ? "btn-primary" : "btn-success")">
+            @(isEditing ? "Confirmar Alteração" : "Incluir Produto")
+        </button>
     </div>
 
 </EditForm>
+
+<div class="text-success text-center p-3">
+    @msg
+</div>
 
 <div class="text-center p-3">
     <table class="table shadow" style="font-family:Roboto">
@@ -60,6 +66,7 @@
 </div>
 
 @code {
+    bool isEditing = false; // Propriedade para controlar o estado de edição
     private List<Produto>? produtos = new();
     string msg = string.Empty;
     Produto? produto = new();
@@ -78,10 +85,12 @@
         {
             msg = await response.Content.ReadAsStringAsync();
             produto = new();
+            isEditing = false; // Reseta o modo de edição se a consulta falhar
         }
         else
         {
             produto = await response.Content.ReadFromJsonAsync<Produto>();
+            isEditing = true; // Define o modo de edição como verdadeiro
         }
     }
 
@@ -103,7 +112,7 @@
 
     private async Task Incluir()
     {
-        string api = "api/produtos/incluir-ou-alterar";
+        string api = isEditing ? "api/produtos/incluir-ou-alterar" : "api/produtos/incluir";
         var response = await httpClient.PostAsJsonAsync<Produto>(api, produto!);
 
         if (!response.IsSuccessStatusCode)
@@ -112,10 +121,11 @@
         }
         else
         {
-            msg = "Produto incluido com sucesso!";
+            msg = isEditing ? "Produto alterado com sucesso!" : "Produto incluído com sucesso!";
             await Carregar();
             produto = new();
-        }        
+            isEditing = false; // Reseta o estado após a inclusão ou alteração
+        }
     }
 
     protected async Task Excluir(int produtoId)
@@ -141,6 +151,7 @@
             msg = "Excluido com sucesso";
             await Carregar();
             produto = new();
+            isEditing = false; // Reseta o estado após a exclusão
         }
 
     }
