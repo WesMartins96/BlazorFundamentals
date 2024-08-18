@@ -42,6 +42,36 @@ namespace EcommerceStart.Server.Repositories
             return produtos;
         }
 
+        public IEnumerable<Produto> GetProdutosByName(string nome)
+        {
+            var produtos = new List<Produto>();
+
+            var query = "SELECT * FROM produtos WHERE nome ILIKE @Nome";
+
+            using (var command = _connection.CreateCommand())
+            {
+                command.CommandText = query;
+                command.Parameters.Add(new NpgsqlParameter("@Nome", $"%{nome}%"));
+                _connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        produtos.Add(new Produto
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nome = reader.GetString(reader.GetOrdinal("nome")),
+                            Preco = reader.GetDecimal(reader.GetOrdinal("preco")),
+                            Quantidade = reader.GetInt32(reader.GetOrdinal("quantidade")),
+                            Imagem = reader.GetString(reader.GetOrdinal("imagem"))
+                        });
+                    }
+                }
+                _connection.Close();
+            }
+            return produtos;
+        }
+
         public Produto GetProdutoById(int id) 
         { 
             Produto produto = null;

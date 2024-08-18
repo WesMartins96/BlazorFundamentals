@@ -21,7 +21,17 @@ namespace EcommerceStart.Server.Controllers
         [HttpGet("listar")]
         public IActionResult Listar(string? nome)
         {
-            var produtos = _produtoRepository.GetProdutos();
+            IEnumerable<Produto> produtos;
+
+            if (string.IsNullOrEmpty(nome))
+            {
+                produtos = _produtoRepository.GetProdutos();
+            }
+            else
+            {
+                produtos = _produtoRepository.GetProdutosByName(nome);
+            }
+
             return Ok(produtos);
         }
 
