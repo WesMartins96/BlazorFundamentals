@@ -48,31 +48,16 @@ namespace EcommerceStart.Server.Controllers
             if (produto == null)
                 return BadRequest("Produto não foi enviado por parâmetro");
 
-            Produto? produtoExistente = Banco.Produtos.Where(p => p.Id.Equals(produto.Id)).FirstOrDefault();
-            if (produtoExistente is null) 
+            try
             {
-                //aqui o produto é novo
-                Produto? produtoAnterior = Banco.Produtos.OrderByDescending(e => e.Id).FirstOrDefault();
-                if (produtoAnterior != null)
-                {
-                    produto.Id = produtoAnterior.Id + 1;
-                }
-                else
-                {
-                    produto.Id = 1;
-                }
-                Banco.Produtos.Add(produto);
+                _produtoRepository.IncluirOuAlterar(produto);
+                return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                //aqui o produto já existe
-                produtoExistente.Nome = produto.Nome;
-                produtoExistente.Preco = produto.Preco;
-                produtoExistente.Quantidade = produto.Quantidade;
-                produtoExistente.Imagem = produto.Imagem;
+                // Log o erro e retorne uma resposta adequada
+                return StatusCode(500, $"Erro ao processar a solicitação: {ex.Message}");
             }
-                      
-            return Ok();
         }
 
 

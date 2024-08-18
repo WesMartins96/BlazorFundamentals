@@ -159,5 +159,52 @@ namespace EcommerceStart.Server.Repositories
                 _connection.Close();
             }
         }
+
+        public void IncluirOuAlterar(Produto produto)
+        {
+            using (var connection = new NpgsqlConnection(_connection.ConnectionString))
+            {
+                connection.Open();
+
+                if (ProdutoExiste(produto.Id, connection))
+                {
+                    // Atualizar produto existente
+                    var updateQuery = "UPDATE produtos SET nome = @Nome, preco = @Preco, quantidade = @Quantidade, imagem = @Imagem WHERE id = @Id";
+                    using (var command = new NpgsqlCommand(updateQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", produto.Id);
+                        command.Parameters.AddWithValue("@Nome", produto.Nome);
+                        command.Parameters.AddWithValue("@Preco", produto.Preco);
+                        command.Parameters.AddWithValue("@Quantidade", produto.Quantidade);
+                        command.Parameters.AddWithValue("@Imagem", produto.Imagem);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    // Inserir novo produto
+                    var insertQuery = "INSERT INTO produtos (nome, preco, quantidade, imagem) VALUES (@Nome, @Preco, @Quantidade, @Imagem)";
+                    using (var command = new NpgsqlCommand(insertQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nome", produto.Nome);
+                        command.Parameters.AddWithValue("@Preco", produto.Preco);
+                        command.Parameters.AddWithValue("@Quantidade", produto.Quantidade);
+                        command.Parameters.AddWithValue("@Imagem", produto.Imagem);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        private bool ProdutoExiste(int id, NpgsqlConnection connection)
+        {
+            var query = "SELECT COUNT(*) FROM produtos WHERE id = @Id";
+            using (var command = new NpgsqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Id", id);
+                var count = (long)command.ExecuteScalar();
+                return count > 0;
+            }
+        }
     }
 }
