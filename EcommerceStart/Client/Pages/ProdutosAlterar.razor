@@ -44,7 +44,7 @@
         </div>
     </EditForm>
 
-    <div class="text-danger p-3 text-center">
+    <div class="text-success p-3 text-center">
         @msg
     </div>
 
@@ -90,11 +90,11 @@
             if (string.IsNullOrEmpty(msg))
             {
                 msg = $"Não foi possivel acessar {api}";
-            }
-            else
-            {
-                msg = "Produto alterado com sucesso!";
-            }
+            }          
+        }
+        else
+        {
+            msg = "Produto alterado com sucesso!";
         }
     }
 }
